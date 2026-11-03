@@ -1,0 +1,1541 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101a2b">
+  <meta name="description" content="Lokalny tracker postępów i materiałów w Fate/Grand Order.">
+  <title>FGO Tracker</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #0b1321;
+  --panel: #121e30;
+  --panel-2: #182840;
+  --panel-3: #20334e;
+  --line: #2d425e;
+  --text: #edf4ff;
+  --muted: #a2b4ca;
+  --soft: #7189a7;
+  --accent: #9bc7ff;
+  --accent-2: #6da6ee;
+  --mint: #91ddcd;
+  --danger: #ff929b;
+  --shadow: 0 14px 38px rgba(0, 0, 0, .2);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--bg); }
+body { margin: 0; min-height: 100vh; color: var(--text); background: radial-gradient(ellipse at 50% -20%, #1a3455 0, var(--bg) 52%); }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.app-shell { width: min(100%, 760px); min-height: 100vh; margin: 0 auto; display: flex; flex-direction: column; padding: 0 16px env(safe-area-inset-bottom); }
+.app-header { display: flex; align-items: center; gap: 11px; padding: calc(17px + env(safe-area-inset-top)) 2px 15px; border-bottom: 1px solid rgba(139, 174, 215, .15); }
+.brand-mark { flex: 0 0 40px; height: 40px; display: grid; place-items: center; border: 1px solid #5b7fa9; border-radius: 13px; color: #d4e8ff; background: linear-gradient(145deg, #29466b, #17263d); font-size: 23px; box-shadow: 0 5px 20px #07101d; }
+.brand-copy { min-width: 0; }
+.brand-title { font-size: 16px; font-weight: 850; letter-spacing: .12em; }
+.brand-title span { color: var(--accent); }
+.brand-subtitle { margin-top: 2px; color: var(--muted); font-size: 11px; letter-spacing: .04em; }
+.offline-pill { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border: 1px solid #315e61; border-radius: 99px; color: #b5eee0; background: rgba(34, 91, 87, .18); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px #69d5bd; }
+.main-content { flex: 1; padding: 20px 0 30px; }
+.app-footer { display: flex; justify-content: space-between; padding: 14px 2px calc(15px + env(safe-area-inset-bottom)); color: #71869f; font-size: 10px; letter-spacing: .04em; border-top: 1px solid rgba(139, 174, 215, .12); }
+.loading-panel { min-height: 55vh; display: grid; align-content: center; justify-items: center; color: var(--muted); }
+.spinner { width: 27px; height: 27px; border: 3px solid #324b69; border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.page-heading { margin: 5px 0 16px; }
+.eyebrow { color: var(--mint); font-size: 10px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin: 5px 0 4px; font-size: clamp(23px, 6vw, 29px); line-height: 1.12; letter-spacing: -.035em; }
+h2 { margin: 0; font-size: 17px; letter-spacing: -.02em; }
+h3 { margin: 0; font-size: 13px; }
+.subheading, .muted { color: var(--muted); }
+.subheading { margin: 0; font-size: 12px; line-height: 1.5; }
+.home-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 17px 0 14px; }
+.stat-card { min-width: 0; padding: 12px 11px; border: 1px solid var(--line); border-radius: 15px; background: rgba(18, 30, 48, .82); }
+.stat-value { font-size: 21px; font-weight: 800; letter-spacing: -.04em; }
+.stat-label { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 17px; }
+.action-row .btn-primary { grid-column: 1 / -1; }
+.btn { min-height: 43px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: #1b2b41; font-size: 12px; font-weight: 700; transition: filter .15s ease, transform .15s ease, background .15s ease; }
+.btn:active { transform: scale(.985); }
+.btn:hover { filter: brightness(1.12); }
+.btn-primary { color: #0e1a2a; border-color: #b4d5fb; background: linear-gradient(135deg, #b9d9ff, #83b6f1); }
+.btn-secondary { background: #1a2b42; }
+.btn-quiet { border-color: transparent; background: transparent; color: var(--accent); }
+.btn-danger { color: #ffdfe2; border-color: #73414b; background: #422833; }
+.btn-small { min-height: 34px; padding: 7px 10px; font-size: 11px; }
+.btn-block { width: 100%; }
+.btn:disabled { opacity: .48; cursor: not-allowed; }
+.search-wrap { position: relative; margin: 0 0 12px; }
+.search-wrap input { width: 100%; padding-left: 38px; }
+.search-icon { position: absolute; left: 13px; top: 50%; color: var(--soft); transform: translateY(-50%); pointer-events: none; }
+input, select, textarea { width: 100%; min-width: 0; min-height: 42px; padding: 10px 11px; color: var(--text); border: 1px solid #344a66; border-radius: 11px; background: #0f1a2a; }
+input::placeholder, textarea::placeholder { color: #7186a0; }
+select { appearance: none; }
+textarea { min-height: 80px; resize: vertical; }
+.section-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 19px 0 10px; }
+.section-note { color: var(--muted); font-size: 11px; }
+.servant-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.servant-card { position: relative; min-width: 0; padding: 12px; text-align: left; border: 1px solid #2d4563; border-radius: 17px; color: var(--text); background: linear-gradient(145deg, rgba(27, 45, 68, .98), rgba(17, 29, 46, .98)); box-shadow: 0 6px 18px rgba(0,0,0,.13); overflow: hidden; }
+.servant-card:before { content: ""; position: absolute; top: -30px; right: -30px; width: 88px; height: 88px; border: 1px solid rgba(169, 204, 244, .12); border-radius: 50%; box-shadow: 0 0 0 11px rgba(169, 204, 244, .025), 0 0 0 22px rgba(169, 204, 244, .018); }
+.servant-card:active { transform: scale(.99); }
+.servant-card-top { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.servant-avatar { flex: 0 0 43px; width: 43px; height: 43px; display: grid; place-items: center; border: 1px solid #4d6e94; border-radius: 13px; color: #d7eaff; background: linear-gradient(150deg, #395c85, #1a2c46); font-size: 15px; font-weight: 800; letter-spacing: .03em; }
+.servant-title-wrap { min-width: 0; }
+.servant-name { display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 12px; line-height: 1.25; font-weight: 760; }
+.servant-class { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.servant-card-bottom { display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; padding-top: 9px; border-top: 1px solid rgba(143, 174, 211, .13); color: var(--muted); font-size: 10px; }
+.skill-mini { color: #c3dcfa; font-variant-numeric: tabular-nums; }
+.empty-state { padding: 24px 16px; border: 1px dashed #405772; border-radius: 16px; text-align: center; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.back-button { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 14px; padding: 7px 0; color: var(--accent); border: 0; background: transparent; font-size: 12px; font-weight: 750; }
+.servant-hero { display: flex; align-items: center; gap: 14px; padding: 16px; border: 1px solid #345071; border-radius: 18px; background: linear-gradient(140deg, #203b5b, #14243a); box-shadow: var(--shadow); }
+.servant-hero .servant-avatar { flex-basis: 64px; width: 64px; height: 64px; border-radius: 18px; font-size: 20px; }
+.hero-main { min-width: 0; flex: 1; }
+.hero-name { margin: 0 0 5px; font-size: 19px; line-height: 1.15; }
+.hero-meta { color: #b5c8de; font-size: 11px; }
+.rarity { color: #f1d79c; letter-spacing: .08em; }
+.detail-section, .panel { margin-top: 13px; padding: 15px; border: 1px solid var(--line); border-radius: 16px; background: rgba(18, 30, 48, .9); }
+.detail-section > .section-row:first-child, .panel > .section-row:first-child { margin-top: 0; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+.field { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+.field label, .field-label { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+.field small { color: var(--soft); font-size: 10px; line-height: 1.4; }
+.skill-list { display: grid; gap: 9px; }
+.skill-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.skill-copy { min-width: 0; }
+.skill-name { font-size: 12px; font-weight: 700; }
+.skill-level-label { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.stepper button { width: 34px; height: 34px; border: 1px solid #405a79; border-radius: 10px; color: var(--text); background: #20344e; font-size: 17px; }
+.stepper output { min-width: 22px; text-align: center; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ascension-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.ascension-step { min-height: 61px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid #344a66; border-radius: 12px; color: var(--muted); background: #111e30; font-size: 10px; }
+.ascension-step strong { font-size: 13px; }
+.ascension-step.done { border-color: #438c85; color: #d0fff2; background: rgba(42, 112, 101, .23); }
+.cost-table, .inventory-list { display: grid; gap: 7px; }
+.cost-row, .inventory-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px; border: 1px solid rgba(105, 137, 172, .2); border-radius: 10px; background: rgba(12, 22, 36, .58); }
+.cost-row span, .inventory-name { min-width: 0; color: #dce9f8; font-size: 11px; }
+.cost-qty { color: var(--accent); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.inventory-row input { width: 86px; min-height: 36px; padding: 6px 8px; text-align: right; }
+.inventory-category { margin: 16px 0 8px; color: var(--mint); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.info-box { padding: 11px 12px; border: 1px solid #405a78; border-radius: 12px; color: #c2d4e8; background: rgba(35, 57, 83, .45); font-size: 11px; line-height: 1.55; }
+.info-box strong { color: var(--text); }
+.warning-box { border-color: #846744; background: rgba(103, 74, 37, .16); }
+.settings-grid { display: grid; gap: 12px; }
+.data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.file-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--muted); font-size: 10px; }
+.add-form { display: grid; gap: 12px; }
+.form-actions { display: flex; gap: 8px; margin-top: 3px; }
+.form-actions .btn { flex: 1; }
+.toast-region { position: fixed; z-index: 20; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); display: grid; justify-items: center; pointer-events: none; }
+.toast { max-width: 520px; padding: 11px 15px; border: 1px solid #4e7198; border-radius: 13px; color: #f2f7ff; background: #203854; box-shadow: var(--shadow); font-size: 12px; opacity: 0; transform: translateY(8px); transition: .2s ease; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (min-width: 560px) {
+  .app-shell { padding-left: 22px; padding-right: 22px; }
+  .servant-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .action-row { grid-template-columns: repeat(3, 1fr); }
+  .action-row .btn-primary { grid-column: auto; }
+}
+@media (max-width: 360px) {
+  .app-shell { padding-left: 12px; padding-right: 12px; }
+  .servant-grid { gap: 8px; }
+  .servant-card { padding: 10px; }
+  .servant-avatar { flex-basis: 37px; width: 37px; height: 37px; }
+  .form-grid { gap: 8px; }
+  .detail-section, .panel { padding: 12px; }
+}
+
+.hero-level-cap { margin-top: 5px; color: #91ddcd; font-size: 10px; line-height: 1.4; }
+.cost-summary { display: grid; gap: 15px; }
+.cost-group { display: grid; gap: 8px; }
+.cost-group-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cost-group-heading h3 { color: #dce9f8; font-size: 12px; }
+.cost-group-heading span { color: var(--muted); font-size: 10px; text-align: right; }
+.material-cost-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.material-cost-card { min-width: 0; min-height: 68px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; padding: 10px 11px; border: 1px solid rgba(105, 137, 172, .27); border-radius: 12px; background: linear-gradient(145deg, rgba(27, 45, 68, .88), rgba(12, 22, 36, .82)); }
+.material-cost-name { color: #c5d7ec; font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+.material-cost-amount { color: var(--accent); font-size: 16px; font-weight: 850; font-variant-numeric: tabular-nums; }
+.cost-total { display: grid; gap: 9px; padding: 12px; border: 1px solid #54769b; border-radius: 14px; background: linear-gradient(145deg, rgba(35, 62, 92, .72), rgba(18, 30, 48, .9)); }
+.cost-total .cost-group-heading h3 { color: #d9ebff; font-size: 15px; letter-spacing: .02em; }
+.cost-total .material-cost-card { border-color: rgba(155, 199, 255, .28); background: rgba(8, 18, 32, .5); }
+.cost-missing-note, .cost-empty { padding: 10px 11px; border: 1px dashed #405772; border-radius: 11px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.cost-empty { padding: 8px 0; border: 0; }
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-mark" aria-hidden="true">✦</div>
+      <div class="brand-copy">
+        <div class="brand-title">FGO <span>TRACKER</span></div>
+        <div class="brand-subtitle">Twoja prywatna Chaldea</div>
+      </div>
+      <div class="offline-pill"><span class="status-dot"></span> offline-ready</div>
+    </header>
+
+    <main id="app" class="main-content" aria-live="polite">
+      <section class="loading-panel"><div class="spinner"></div><p>Ładowanie Chaldei…</p></section>
+    </main>
+
+    <footer class="app-footer">
+      <span>FGO Tracker</span><span id="footer-version">v1.0.4</span>
+    </footer>
+  </div>
+  <input id="database-file-input" class="visually-hidden" type="file" accept=".json,application/json" hidden>
+  <input id="save-file-input" class="visually-hidden" type="file" accept=".json,application/json" hidden>
+  <div id="toast-region" class="toast-region" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Dane startowe są osadzone w HTML, więc plik działa także otwarty lokalnie. -->
+  <script id="fgo-default-database" type="application/json">{
+  "schema_version": 1,
+  "database_version": "1.0.3",
+  "game": "Fate/Grand Order Global",
+  "last_updated": "2026-11-01",
+  "description": "Baza danych FGO. Koszty materiałów są celowo puste i mogą zostać uzupełnione w kolejnych aktualizacjach.",
+  "materials": [],
+  "servants": [
+    {
+      "id": "gilgamesh",
+      "name": "Gilgamesh",
+      "class": "Archer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "koyanskaya_light",
+      "name": "Koyanskaya of Light",
+      "class": "Assassin",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "oberon",
+      "name": "Oberon",
+      "class": "Pretender",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "castoria",
+      "name": "Artoria Caster",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ryouma_lancer",
+      "name": "Sakamoto Ryouma (Lancer)",
+      "class": "Lancer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "waver",
+      "name": "Zhuge Liang (Waver)",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "lanling",
+      "name": "Prince of Lan Ling",
+      "class": "Saber",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ranmaru",
+      "name": "Mysterious Ranmaru X",
+      "class": "Avenger",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "mash",
+      "name": "Mash Kyrielight",
+      "class": "Shielder",
+      "rarity": 0,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "cu_lancer",
+      "name": "Cu Chulainn",
+      "class": "Lancer",
+      "rarity": 3,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    }
+  ]
+}</script>
+  <script id="fgo-default-save" type="application/json">{
+  "save_schema_version": 1,
+  "exported_at": null,
+  "inventory": {},
+  "currencies": {
+    "pure_prisms": 0
+  },
+  "embers": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0
+  },
+  "servants": {
+    "gilgamesh": {
+      "owned": true,
+      "level": 100,
+      "np_level": 1,
+      "skill_levels": [
+        8,
+        8,
+        7
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 8/8/7, poziom 100. Graile ma już uwzględnione w obecnym poziomie."
+    },
+    "koyanskaya_light": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        4,
+        4,
+        4
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 4/4/4."
+    },
+    "oberon": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        3,
+        4,
+        3
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 3/4/3."
+    },
+    "castoria": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        2,
+        2,
+        2
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 2/2/2."
+    },
+    "ryouma_lancer": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        2,
+        7,
+        2
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Chodzi o wersję Lancer, nie Rider. Obecnie 2/7/2."
+    },
+    "waver": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        4,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Poziom i ascension do uzupełnienia."
+    },
+    "lanling": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Poziom i ascension do uzupełnienia."
+    },
+    "ranmaru": {
+      "owned": true,
+      "level": null,
+      "np_level": 5,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "NP5. Przyjęłam, że ascension są zrobione, bo postać jest już levelowana; wpisz dokładny poziom poniżej."
+    },
+    "mash": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Rozwój Mash jest powiązany z fabułą; trzeci skill może zależeć od odblokowania."
+    },
+    "cu_lancer": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Cu Chulainn w wersji Lancer, 3★. Poziom do uzupełnienia."
+    }
+  },
+  "selected_servant_id": "gilgamesh",
+  "last_view": "home"
+}</script>
+  <script>
+'use strict';
+
+const APP_VERSION = '1.0.4';
+const DB_NAME = 'fgo-tracker-local';
+const DB_VERSION = 1;
+const STORE_NAME = 'app-data';
+const DATABASE_KEY = 'fgo_database';
+const SAVE_KEY = 'fgo_save';
+
+let idb = null;
+let storageMode = 'memory';
+let database = null;
+let saveData = null;
+let currentView = 'home';
+let activeServantId = null;
+let toastTimer = null;
+
+const app = document.getElementById('app');
+const databaseInput = document.getElementById('database-file-input');
+const saveInput = document.getElementById('save-file-input');
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function initials(name) {
+  const words = String(name || '?').trim().split(/\s+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}
+
+function showToast(message) {
+  const region = document.getElementById('toast-region');
+  region.innerHTML = `<div class="toast">${escapeHtml(message)}</div>`;
+  const toast = region.firstElementChild;
+  requestAnimationFrame(() => toast.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 220);
+  }, 2400);
+}
+
+function openIndexedDB() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) {
+      reject(new Error('Ta przeglądarka nie obsługuje IndexedDB.'));
+      return;
+    }
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error('Nie udało się otworzyć lokalnej bazy danych.'));
+  });
+}
+
+function idbGet(key) {
+  return new Promise((resolve, reject) => {
+    const tx = idb.transaction(STORE_NAME, 'readonly');
+    const request = tx.objectStore(STORE_NAME).get(key);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function idbSet(key, value) {
+  return new Promise((resolve, reject) => {
+    const tx = idb.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error || new Error('Nie udało się zapisać danych.'));
+    tx.onabort = () => reject(tx.error || new Error('Zapis danych został przerwany.'));
+  });
+}
+
+async function persistAll() {
+  if (storageMode === 'indexeddb' && idb) {
+    try {
+      await Promise.all([
+        idbSet(DATABASE_KEY, database),
+        idbSet(SAVE_KEY, saveData)
+      ]);
+      return;
+    } catch (error) {
+      console.warn('Zapis do IndexedDB nie powiódł się; próba localStorage:', error);
+      idb = null;
+      storageMode = 'localstorage';
+    }
+  }
+  if (storageMode === 'localstorage') {
+    try {
+      localStorage.setItem(DATABASE_KEY, JSON.stringify(database));
+      localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+      return;
+    } catch (error) {
+      console.warn('Zapis do localStorage nie powiódł się:', error);
+      storageMode = 'memory';
+      showToast('Przeglądarka blokuje zapis lokalny. Wyeksportuj kopię danych.');
+    }
+  }
+}
+
+async function persistSave() {
+  await persistAll();
+}
+
+async function persistDatabase() {
+  await persistAll();
+}
+
+function readEmbeddedJson(elementId) {
+  const element = document.getElementById(elementId);
+  if (!element) throw new Error(`Brakuje wbudowanych danych startowych: ${elementId}.`);
+  try { return JSON.parse(element.textContent); }
+  catch { throw new Error(`Wbudowane dane ${elementId} są uszkodzone.`); }
+}
+
+function readLocalStorageValue(key) {
+  const raw = localStorage.getItem(key);
+  return raw ? JSON.parse(raw) : null;
+}
+
+function makeEmptySave() {
+  return {
+    save_schema_version: 1,
+    exported_at: null,
+    inventory: {},
+    currencies: { pure_prisms: 0 },
+    embers: { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 },
+    servants: {},
+    selected_servant_id: null,
+    last_view: 'home'
+  };
+}
+
+function makeProgressRecord(servant) {
+  const existingSkills = Array.isArray(servant.initial_skill_levels) ? servant.initial_skill_levels : [1, 1, 1];
+  return {
+    owned: true,
+    level: servant.initial_level ?? null,
+    np_level: servant.initial_np_level ?? 1,
+    skill_levels: [...existingSkills].slice(0, 3),
+    ascension_done: [false, false, false, false],
+    note: ''
+  };
+}
+
+function ensureSaveRecords() {
+  if (!saveData || typeof saveData !== 'object') saveData = makeEmptySave();
+  if (!saveData.inventory || typeof saveData.inventory !== 'object') saveData.inventory = {};
+  if (!saveData.currencies || typeof saveData.currencies !== 'object') saveData.currencies = { pure_prisms: 0 };
+  delete saveData.currencies.qp; // starszy zapis: QP nie jest już śledzone
+  if (saveData.currencies.pure_prisms == null) saveData.currencies.pure_prisms = 0;
+  if (!saveData.embers || typeof saveData.embers !== 'object') saveData.embers = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0 };
+  if (!saveData.servants || typeof saveData.servants !== 'object') saveData.servants = {};
+  if (!Array.isArray(database?.servants)) return;
+  database.servants.forEach(servant => {
+    if (!saveData.servants[servant.id]) saveData.servants[servant.id] = makeProgressRecord(servant);
+    const progress = saveData.servants[servant.id];
+    if (!Array.isArray(progress.skill_levels)) progress.skill_levels = [1, 1, 1];
+    delete progress.append_skill_levels; // migracja ze starszej wersji
+    delete progress.target_level; // cel jest zawsze maksymalnym poziomem bez Graala
+    if (!Array.isArray(progress.ascension_done)) progress.ascension_done = [false, false, false, false];
+    while (progress.skill_levels.length < 3) progress.skill_levels.push(1);
+    while (progress.ascension_done.length < 4) progress.ascension_done.push(false);
+    let ascensionLocked = false;
+    progress.ascension_done = progress.ascension_done.slice(0, 4).map(done => {
+      if (!done) ascensionLocked = true;
+      return Boolean(done) && !ascensionLocked;
+    });
+  });
+}
+
+async function initialise() {
+  try {
+    let storedDatabase = null;
+    let storedSave = null;
+
+    // Prefer IndexedDB. Some Android file viewers expose index.html through a
+    // content:// URL where IndexedDB can be unavailable; use localStorage then.
+    try {
+      idb = await openIndexedDB();
+      storageMode = 'indexeddb';
+      storedDatabase = await idbGet(DATABASE_KEY);
+      storedSave = await idbGet(SAVE_KEY);
+    } catch (indexedDbError) {
+      console.warn('IndexedDB niedostępne, próba localStorage:', indexedDbError);
+      idb = null;
+      try {
+        storedDatabase = readLocalStorageValue(DATABASE_KEY);
+        storedSave = readLocalStorageValue(SAVE_KEY);
+        storageMode = 'localstorage';
+      } catch (localStorageError) {
+        console.warn('localStorage niedostępne; aplikacja uruchomi się w trybie tymczasowym:', localStorageError);
+        storageMode = 'memory';
+      }
+    }
+
+    // Bootstrap data is embedded directly in index.html. This avoids fetch()
+    // which browsers block when the app is opened from file:// or content://.
+    database = storedDatabase || readEmbeddedJson('fgo-default-database');
+    saveData = storedSave || readEmbeddedJson('fgo-default-save');
+
+    validateDatabase(database);
+    cleanUnusedDatabaseFields(database);
+    validateSave(saveData);
+    ensureSaveRecords();
+    if (!saveData.selected_servant_id && database.servants.length) {
+      saveData.selected_servant_id = database.servants[0].id;
+    }
+    const rememberedView = saveData.last_view;
+    const rememberedServant = saveData.selected_servant_id;
+    await persistAll();
+
+    // Pierwszy wpis historii jest menu. Dzięki temu sprzętowy przycisk Wstecz
+    // na Androidzie wraca do menu zamiast od razu zamykać aplikację.
+    try { history.replaceState({ fgoTracker: true, view: 'home' }, ''); } catch (error) { console.warn('Historia przeglądarki niedostępna:', error); }
+    if (rememberedView === 'detail' && rememberedServant && getServant(rememberedServant)) {
+      pushAppView('detail', { servantId: rememberedServant });
+      renderDetail(rememberedServant);
+    } else renderHome();
+
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+      navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Service Worker nie został zarejestrowany:', error));
+    }
+    if (storageMode === 'memory') {
+      showToast('Tryb tymczasowy: eksportuj dane przed zamknięciem strony.');
+    }
+  } catch (error) {
+    console.error(error);
+    app.innerHTML = `
+      <section class="panel">
+        <div class="eyebrow">Nie udało się uruchomić</div>
+        <h1>Chaldea nie odpowiada</h1>
+        <p class="subheading">${escapeHtml(error.message || 'Wystąpił nieznany błąd.')}</p>
+        <div class="info-box warning-box" style="margin-top:14px">
+          Dane startowe są teraz wbudowane w <strong>index.html</strong>. Upewnij się, że otwierasz oryginalny plik z paczki i nie usunęłaś jego zawartości.
+        </div>
+      </section>`;
+  }
+}
+
+function validateDatabase(candidate) {
+  if (!candidate || typeof candidate !== 'object') throw new Error('Plik bazy nie jest prawidłowym obiektem JSON.');
+  if (candidate.schema_version !== 1) throw new Error(`Nieobsługiwana wersja struktury bazy: ${candidate.schema_version ?? 'brak'}.`);
+  if (!Array.isArray(candidate.materials) || !Array.isArray(candidate.servants)) throw new Error('Baza musi zawierać tablice "materials" i "servants".');
+  const materialIds = new Set();
+  for (const material of candidate.materials) {
+    if (!material || typeof material.id !== 'string' || typeof material.name !== 'string') throw new Error('Każdy materiał musi mieć pola "id" i "name".');
+    if (materialIds.has(material.id)) throw new Error(`Powtórzony identyfikator materiału: ${material.id}.`);
+    materialIds.add(material.id);
+  }
+  const servantIds = new Set();
+  for (const servant of candidate.servants) {
+    if (!servant || typeof servant.id !== 'string' || typeof servant.name !== 'string') throw new Error('Każdy Servant musi mieć pola "id" i "name".');
+    if (servantIds.has(servant.id)) throw new Error(`Powtórzony identyfikator Servanta: ${servant.id}.`);
+    servantIds.add(servant.id);
+  }
+}
+
+function cleanUnusedDatabaseFields(candidate) {
+  if (!candidate || !Array.isArray(candidate.servants)) return;
+  const referencedMaterials = new Set();
+  candidate.servants.forEach(servant => {
+    const costs = servant.costs || {};
+    delete costs.append_skills;
+    delete costs.append;
+    (costs.ascension || []).forEach(step => {
+      if (!step || typeof step !== 'object') return;
+      delete step.qp;
+      Object.keys(step.materials || {}).forEach(id => referencedMaterials.add(id));
+    });
+    (costs.skills || []).forEach(group => (group || []).forEach(step => {
+      if (!step || typeof step !== 'object') return;
+      delete step.qp;
+      Object.keys(step.materials || {}).forEach(id => referencedMaterials.add(id));
+    }));
+    const levelSteps = Array.isArray(costs.level_up) ? costs.level_up : (costs.level_up?.steps || []);
+    levelSteps.forEach(step => {
+      if (!step || typeof step !== 'object') return;
+      delete step.qp;
+      Object.keys(step.materials || {}).forEach(id => referencedMaterials.add(id));
+    });
+  });
+  if (Array.isArray(candidate.materials)) {
+    candidate.materials = candidate.materials
+      .filter(material => !String(material.category || '').toLowerCase().includes('append skills') || referencedMaterials.has(material.id))
+      .map(material => {
+        if (typeof material.category === 'string') {
+          material.category = material.category.replace(/\s*\/\s*Append Skills/ig, '').replace(/Append Skills\s*\/\s*/ig, '').trim();
+        }
+        return material;
+      });
+  }
+}
+
+function validateSave(candidate) {
+  if (!candidate || typeof candidate !== 'object' || candidate.save_schema_version !== 1) throw new Error('Nieobsługiwany lub nieprawidłowy plik zapisu postępów.');
+  if (!candidate.servants || typeof candidate.servants !== 'object' || !candidate.inventory || typeof candidate.inventory !== 'object') throw new Error('Plik postępów nie zawiera wymaganych danych.');
+}
+
+function getServant(id) { return database.servants.find(item => item.id === id); }
+function getProgress(id) { return saveData.servants[id] || (saveData.servants[id] = makeProgressRecord(getServant(id) || {})); }
+function getMaterialName(id) {
+  const material = database.materials.find(item => item.id === id);
+  if (material) return material.name;
+  const emberNames = { ember_1: '1★ Ember', ember_2: '2★ Ember', ember_3: '3★ Ember', ember_4: '4★ Ember', ember_5: '5★ Ember' };
+  return emberNames[id] || id;
+}
+function formatNumber(number) { return Number(number || 0).toLocaleString('pl-PL'); }
+
+function pushAppView(view, extra = {}) {
+  try { history.pushState({ fgoTracker: true, view, ...extra }, ''); }
+  catch (error) { console.warn('Nie udało się zapisać widoku w historii:', error); }
+}
+
+function replaceAppView(view, extra = {}) {
+  try { history.replaceState({ fgoTracker: true, view, ...extra }, ''); }
+  catch (error) { console.warn('Nie udało się zaktualizować historii:', error); }
+}
+
+function goBackToPreviousView() {
+  if (history.state?.fgoTracker && currentView !== 'home') history.back();
+  else {
+    replaceAppView('home');
+    renderHome();
+  }
+}
+
+function getMaxBaseLevel(servant) {
+  const caps = { 0: 65, 1: 60, 2: 65, 3: 70, 4: 80, 5: 90 };
+  return caps[Number(servant?.rarity)] || 70;
+}
+
+function getUnlockedAscensionCount(progress) {
+  const ascensions = Array.isArray(progress.ascension_done) ? progress.ascension_done : [];
+  let completed = 0;
+  for (const done of ascensions) { if (!done) break; completed += 1; }
+  return completed;
+}
+
+function getUnlockedLevelCap(servant, progress) {
+  const baseMax = getMaxBaseLevel(servant);
+  return Math.min(baseMax, baseMax - 40 + getUnlockedAscensionCount(progress) * 10);
+}
+
+function addMaterialTotals(target, materials) {
+  Object.entries(materials || {}).forEach(([id, quantity]) => {
+    const value = Number(quantity || 0);
+    if (value > 0) target[id] = (target[id] || 0) + value;
+  });
+}
+
+function renderMaterialTiles(materialTotals) {
+  const entries = Object.entries(materialTotals || {})
+    .filter(([, quantity]) => Number(quantity) > 0)
+    .sort(([a], [b]) => getMaterialName(a).localeCompare(getMaterialName(b), 'pl'));
+  if (!entries.length) return '<div class="cost-empty">Brak materiałów do zebrania.</div>';
+  return `<div class="material-cost-grid">${entries.map(([id, quantity]) => `
+    <div class="material-cost-card">
+      <span class="material-cost-name">${escapeHtml(getMaterialName(id))}</span>
+      <strong class="material-cost-amount">×${formatNumber(quantity)}</strong>
+    </div>`).join('')}</div>`;
+}
+
+function renderHome() {
+  currentView = 'home';
+  if (saveData) saveData.last_view = 'home';
+  activeServantId = null;
+  const owned = database.servants.filter(servant => getProgress(servant.id).owned !== false);
+  const materialCount = database.materials.length;
+  app.innerHTML = `
+    <div class="page-heading">
+      <div class="eyebrow">Master, witaj z powrotem</div>
+      <h1>Twoja Chaldea</h1>
+      <p class="subheading">Postępy Servantów i ekwipunek w jednym miejscu.</p>
+    </div>
+    <div class="home-stats">
+      <div class="stat-card"><div class="stat-value">${owned.length}</div><div class="stat-label">Twoi Servanci</div></div>
+      <div class="stat-card"><div class="stat-value">${materialCount}</div><div class="stat-label">Materiałów w bazie</div></div>
+      <div class="stat-card"><div class="stat-value">${escapeHtml(database.database_version || '—')}</div><div class="stat-label">Wersja bazy</div></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" data-action="open-add">＋ Dodaj Servanta</button>
+      <button class="btn btn-secondary" data-action="open-inventory">▦ Ekwipunek</button>
+      <button class="btn btn-secondary" data-action="open-settings">⚙ Baza i kopie</button>
+    </div>
+    <div class="search-wrap"><span class="search-icon">⌕</span><input id="servant-search" type="search" placeholder="Szukaj Servanta…" autocomplete="off"></div>
+    <div class="section-row"><h2>Servanci</h2><span class="section-note">Dotknij karty, aby otworzyć</span></div>
+    <div id="servant-grid" class="servant-grid">${owned.length ? owned.map(renderServantCard).join('') : '<div class="empty-state" style="grid-column:1/-1">Nie masz jeszcze Servantów w bazie. Dodaj pierwszego przyciskiem powyżej.</div>'}</div>
+  `;
+  document.getElementById('footer-version').textContent = `v${APP_VERSION}`;
+  const search = document.getElementById('servant-search');
+  search.addEventListener('input', () => {
+    const query = search.value.trim().toLocaleLowerCase('pl-PL');
+    const results = owned.filter(servant => `${servant.name} ${servant.class}`.toLocaleLowerCase('pl-PL').includes(query));
+    document.getElementById('servant-grid').innerHTML = results.length ? results.map(renderServantCard).join('') : '<div class="empty-state" style="grid-column:1/-1">Brak wyników wyszukiwania.</div>';
+  });
+}
+
+function renderServantCard(servant) {
+  const progress = getProgress(servant.id);
+  const level = progress.level ? `Lv. ${progress.level}` : 'Poziom —';
+  const skills = (progress.skill_levels || [1,1,1]).slice(0,3).join(' / ');
+  return `
+    <button class="servant-card" data-action="open-servant" data-id="${escapeHtml(servant.id)}">
+      <div class="servant-card-top">
+        <div class="servant-avatar">${escapeHtml(initials(servant.name))}</div>
+        <div class="servant-title-wrap"><div class="servant-name">${escapeHtml(servant.name)}</div><div class="servant-class">${escapeHtml(servant.class || 'Unknown')} · <span class="rarity">${servant.rarity ? '★'.repeat(Math.min(5, Number(servant.rarity))) : '—'}</span></div></div>
+      </div>
+      <div class="servant-card-bottom"><span>${level}</span><span class="skill-mini">${escapeHtml(skills)}</span></div>
+    </button>`;
+}
+
+function renderDetail(id) {
+  const servant = getServant(id);
+  if (!servant) { renderHome(); showToast('Nie znaleziono tej postaci w aktualnej bazie.'); return; }
+  currentView = 'detail';
+  activeServantId = id;
+  saveData.selected_servant_id = id;
+  saveData.last_view = 'detail';
+  const progress = getProgress(id);
+  const skillNames = servant.skill_names || ['Skill 1','Skill 2','Skill 3'];
+  const skillRows = [0,1,2].map(index => renderSkillRow(skillNames[index] || `Skill ${index+1}`, progress.skill_levels[index] || 1, index)).join('');
+  const costs = renderCostSummary(servant, progress);
+
+  app.innerHTML = `
+    <button class="back-button" data-action="go-home">← Wróć do menu</button>
+    <section class="servant-hero">
+      <div class="servant-avatar">${escapeHtml(initials(servant.name))}</div>
+      <div class="hero-main">
+        <div class="eyebrow">${escapeHtml(servant.class || 'Unknown')} · ${servant.rarity ? '★'.repeat(Math.min(5, Number(servant.rarity))) : 'Specjalny'}</div>
+        <h1 class="hero-name">${escapeHtml(servant.name)}</h1>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-row"><h2>Ascension</h2><span class="section-note">Zaznacz ukończone etapy</span></div>
+      <div class="ascension-grid">${[0,1,2,3].map(index => `<button class="ascension-step ${progress.ascension_done[index]?'done':''}" data-action="toggle-ascension" data-index="${index}"><strong>${progress.ascension_done[index]?'✓':`${index+1}/4`}</strong><span>${progress.ascension_done[index]?'Ukończone':'Etap'}</span></button>`).join('')}</div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-row"><h2>Umiejętności</h2><span class="section-note">Maksymalnie 10</span></div>
+      <div class="skill-list">${skillRows}</div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-row"><h2>Koszty rozwoju</h2><span class="section-note">Materiały do zebrania</span></div>
+      ${costs}
+    </section>
+
+    <section class="detail-section">
+      <div class="field"><label for="servant-note">Notatka</label><textarea id="servant-note" data-progress-field="note" placeholder="Np. priorytet rozwoju, brakujące materiały…">${escapeHtml(progress.note || '')}</textarea></div>
+    </section>
+    <button class="btn btn-danger btn-block" style="margin-top:12px" data-action="remove-servant" data-id="${escapeHtml(id)}">Usuń z mojej listy</button>
+  `;
+}
+
+function renderSkillRow(name, level, index) {
+  return `<div class="skill-row"><div class="skill-copy"><div class="skill-name">${escapeHtml(name)}</div><div class="skill-level-label">Poziom umiejętności</div></div><div class="stepper"><button aria-label="Zmniejsz poziom" data-action="change-skill" data-index="${index}" data-delta="-1">−</button><output>${Number(level)}</output><button aria-label="Zwiększ poziom" data-action="change-skill" data-index="${index}" data-delta="1">＋</button></div></div>`;
+}
+
+function renderCostSummary(servant, progress) {
+  const costs = servant.costs || {};
+  const nextLevelMaterials = {};
+  const fullRemainingMaterials = {};
+  const sections = [];
+  const missingNotes = [];
+  const fullMissingNotes = [];
+
+  const ascension = Array.isArray(costs.ascension) ? costs.ascension : [];
+  const ascensionDone = Array.isArray(progress.ascension_done) ? progress.ascension_done : [];
+  const nextAscensionIndex = ascensionDone.findIndex(done => !done);
+
+  // Bieżący widok: tylko najbliższy nieukończony etap Ascension.
+  if (nextAscensionIndex >= 0 && nextAscensionIndex < 4) {
+    const nextAscension = ascension[nextAscensionIndex];
+    if (nextAscension?.materials && Object.keys(nextAscension.materials).length) {
+      addMaterialTotals(nextLevelMaterials, nextAscension.materials);
+      sections.push(`<div class="cost-group"><div class="cost-group-heading"><h3>Ascension ${nextAscensionIndex + 1}/4</h3><span>Następny etap</span></div>${renderMaterialTiles(nextAscension.materials)}</div>`);
+    } else {
+      missingNotes.push(`Brak danych materiałowych dla Ascension ${nextAscensionIndex + 1}/4.`);
+    }
+  }
+
+  // Bieżący widok: osobno następny poziom każdego z trzech Skillów.
+  const skills = Array.isArray(costs.skills) ? costs.skills : [];
+  const skillNames = servant.skill_names || ['Skill 1', 'Skill 2', 'Skill 3'];
+  [0, 1, 2].forEach(index => {
+    const currentLevel = Number(progress.skill_levels[index] || 1);
+    if (currentLevel >= 10) return;
+    const steps = Array.isArray(skills[index]) ? skills[index] : [];
+    const nextStep = steps.find(step => Number(step.from) === currentLevel && Number(step.to) === currentLevel + 1);
+    if (nextStep?.materials && Object.keys(nextStep.materials).length) {
+      addMaterialTotals(nextLevelMaterials, nextStep.materials);
+      sections.push(`<div class="cost-group"><div class="cost-group-heading"><h3>${escapeHtml(skillNames[index] || `Skill ${index + 1}`)}</h3><span>${currentLevel} → ${currentLevel + 1}</span></div>${renderMaterialTiles(nextStep.materials)}</div>`);
+    } else {
+      missingNotes.push(`Brak danych dla ${escapeHtml(skillNames[index] || `Skill ${index + 1}`)} (${currentLevel} → ${currentLevel + 1}).`);
+    }
+  });
+
+  // Dotychczasowe „Łącznie”: suma wyłącznie kosztów pokazanych wyżej,
+  // czyli najbliższego Ascension i następnego poziomu każdego Skillu.
+  const hasNextMaterials = Object.values(nextLevelMaterials).some(quantity => quantity > 0);
+  if (missingNotes.length) {
+    sections.push(`<div class="cost-missing-note">${missingNotes.join('<br>')}</div>`);
+  }
+  if (hasNextMaterials) {
+    sections.push(`<div class="cost-total"><div class="cost-group-heading"><h3>Łącznie</h3><span>Następne Ascension i poziomy Skillów</span></div>${renderMaterialTiles(nextLevelMaterials)}</div>`);
+  }
+
+  // Nowa sekcja: wszystkie materiały, które pozostały do pełnego rozwoju.
+  // Nie doliczamy kart EXP, QP ani Graali.
+  if (nextAscensionIndex >= 0 && nextAscensionIndex < 4) {
+    for (let index = nextAscensionIndex; index < 4; index++) {
+      const step = ascension[index];
+      if (step?.materials && Object.keys(step.materials).length) {
+        addMaterialTotals(fullRemainingMaterials, step.materials);
+      } else {
+        fullMissingNotes.push(`Ascension ${index + 1}/4`);
+      }
+    }
+  }
+
+  [0, 1, 2].forEach(index => {
+    const currentLevel = Number(progress.skill_levels[index] || 1);
+    if (currentLevel >= 10) return;
+    const steps = Array.isArray(skills[index]) ? skills[index] : [];
+    for (let level = currentLevel; level < 10; level++) {
+      const step = steps.find(item => Number(item.from) === level && Number(item.to) === level + 1);
+      if (step?.materials && Object.keys(step.materials).length) {
+        addMaterialTotals(fullRemainingMaterials, step.materials);
+      } else {
+        fullMissingNotes.push(`${skillNames[index] || `Skill ${index + 1}`} ${level} → ${level + 1}`);
+      }
+    }
+  });
+
+  const maxLevel = getMaxBaseLevel(servant);
+  const hasFullMaterials = Object.values(fullRemainingMaterials).some(quantity => quantity > 0);
+  const fullSubtitle = `Pozostałe do 4/4 Ascension, 10/10/10 i Lv. ${maxLevel} bez Graala · bez kart EXP i QP`;
+  const fullTiles = hasFullMaterials
+    ? renderMaterialTiles(fullRemainingMaterials)
+    : '<div class="cost-empty">Brak materiałów do zebrania.</div>';
+  const fullMissingHtml = fullMissingNotes.length
+    ? `<div class="cost-missing-note">Brak danych w bazie dla: ${fullMissingNotes.map(escapeHtml).join(', ')}.</div>`
+    : '';
+  sections.push(`<div class="cost-total cost-full-total"><div class="cost-group-heading"><h3>Łącznie za wszystko</h3><span>${escapeHtml(fullSubtitle)}</span></div>${fullTiles}${fullMissingHtml}</div>`);
+
+  if (!sections.length) {
+    return `<div class="info-box">Wszystkie Ascension i skille są już na maksymalnym poziomie.</div>`;
+  }
+  return `<div class="cost-summary">${sections.join('')}</div>`;
+}
+
+function renderInventory() {
+  currentView = 'inventory';
+  saveData.last_view = 'home';
+  const materials = [...database.materials].sort((a,b) => String(a.category||'Inne').localeCompare(String(b.category||'Inne'),'pl') || a.name.localeCompare(b.name,'pl'));
+  const groups = new Map();
+  materials.forEach(item => {
+    const category = item.category || 'Pozostałe';
+    if (!groups.has(category)) groups.set(category, []);
+    groups.get(category).push(item);
+  });
+  const materialHtml = materials.length ? [...groups.entries()].map(([category, items]) => `
+    <div class="inventory-category">${escapeHtml(category)}</div>
+    <div class="inventory-list">${items.map(item => `
+      <div class="inventory-row"><span class="inventory-name">${escapeHtml(item.name)}</span><input type="number" min="0" step="1" inputmode="numeric" aria-label="Ilość: ${escapeHtml(item.name)}" data-inventory-id="${escapeHtml(item.id)}" value="${Number(saveData.inventory[item.id] || 0)}"></div>
+    `).join('')}</div>`).join('') : `<div class="info-box">Baza nie zawiera jeszcze materiałów. Możesz później zaimportować uzupełniony <strong>fgo_database.json</strong>; ta sekcja sama się zapełni. Twój zapis ekwipunku pozostanie osobno.</div>`;
+
+  app.innerHTML = `
+    <button class="back-button" data-action="go-home">← Wróć do menu</button>
+    <div class="page-heading"><div class="eyebrow">Inventory</div><h1>Ekwipunek</h1><p class="subheading">Wpisuj ilości posiadanych przedmiotów. Zapis jest automatyczny.</p></div>
+    <section class="panel">
+      <div class="section-row"><h2>Pure Prisms</h2><span class="section-note">Osobny zasób</span></div>
+      <div class="field"><label for="currency-prisms">Pure Prisms</label><input id="currency-prisms" type="number" min="0" inputmode="numeric" data-currency="pure_prisms" value="${Number(saveData.currencies.pure_prisms || 0)}"></div>
+    </section>
+    <section class="panel">
+      <div class="section-row"><h2>Embery</h2><span class="section-note">EXP – osobna kategoria</span></div>
+      <div class="form-grid">${[1,2,3,4,5].map(rarity => `<div class="field"><label for="ember-${rarity}">${rarity}★ Ember</label><input id="ember-${rarity}" type="number" min="0" inputmode="numeric" data-ember="${rarity}" value="${Number(saveData.embers[String(rarity)] || 0)}"></div>`).join('')}</div>
+    </section>
+    <section class="panel">
+      <div class="section-row"><h2>Materiały Ascension i Skill</h2><span class="section-note">${materials.length} pozycji</span></div>
+      ${materialHtml}
+    </section>
+  `;
+}
+
+function renderSettings() {
+  currentView = 'settings';
+  saveData.last_view = 'home';
+  app.innerHTML = `
+    <button class="back-button" data-action="go-home">← Wróć do menu</button>
+    <div class="page-heading"><div class="eyebrow">Dane lokalne</div><h1>Baza i kopie zapasowe</h1><p class="subheading">Baza gry i Twoje postępy są przechowywane osobno.</p></div>
+    <div class="settings-grid">
+      <section class="panel">
+        <div class="section-row"><h2>Baza materiałów i Servantów</h2><span class="section-note">${escapeHtml(database.database_version || '—')}</span></div>
+        <p class="subheading">Ten plik zawiera strukturę, listę materiałów, koszty rozwoju i dane Servantów. Możesz go wyeksportować, wysłać do aktualizacji, a potem zaimportować nową wersję.</p>
+        <div class="file-meta"><span>Ostatnia aktualizacja</span><strong>${escapeHtml(database.last_updated || 'nie podano')}</strong></div>
+        <div class="file-meta"><span>Materiały / Servanci</span><strong>${database.materials.length} / ${database.servants.length}</strong></div>
+        <div class="data-actions">
+          <button class="btn btn-secondary" data-action="export-database">↓ Eksportuj bazę</button>
+          <button class="btn btn-primary" data-action="choose-database">↑ Importuj bazę</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="section-row"><h2>Twój zapis postępów</h2><span class="section-note">Tylko Twoje dane</span></div>
+        <p class="subheading">Zawiera poziomy, NP, skille, Ascension, ekwipunek, Pure Prisms, Embery i ostatnio wybraną postać. Import bazy nie nadpisuje tego pliku.</p>
+        <div class="data-actions">
+          <button class="btn btn-secondary" data-action="export-save">↓ Eksportuj postępy</button>
+          <button class="btn btn-primary" data-action="choose-save">↑ Importuj postępy</button>
+        </div>
+      </section>
+      <div class="info-box"><strong>Ważne:</strong> aplikacja nie wysyła Twoich danych na serwer. Są zapisane w pamięci przeglądarki na tym telefonie. Eksportuj postępy od czasu do czasu, szczególnie przed czyszczeniem danych przeglądarki lub zmianą urządzenia.</div>
+      <div class="info-box warning-box"><strong>Aktualizowanie bazy:</strong> wyeksportuj <strong>fgo_database.json</strong> i prześlij go razem z tekstem zmian. Zaktualizowany plik powinien zachować tę samą strukturę i identyfikatory. Import zastępuje bazę gry, ale nie rusza Twojego zapisu postępów.</div>
+    </div>
+  `;
+}
+
+function renderAddServant() {
+  currentView = 'add';
+  saveData.last_view = 'home';
+  const classes = ['Saber','Archer','Lancer','Rider','Caster','Assassin','Berserker','Ruler','Avenger','Alter Ego','Moon Cancer','Foreigner','Pretender','Shielder','Beast','Other'];
+  app.innerHTML = `
+    <button class="back-button" data-action="go-home">← Wróć do menu</button>
+    <div class="page-heading"><div class="eyebrow">Nowa postać</div><h1>Dodaj Servanta</h1><p class="subheading">Nowa postać zostanie dopisana do lokalnej bazy. Możesz później wyeksportować ją razem z bazą materiałów.</p></div>
+    <section class="panel">
+      <form id="add-servant-form" class="add-form">
+        <div class="field"><label for="new-name">Nazwa Servanta</label><input id="new-name" name="name" required maxlength="80" placeholder="Np. Artoria Pendragon"></div>
+        <div class="form-grid">
+          <div class="field"><label for="new-class">Klasa</label><select id="new-class" name="class">${classes.map(item=>`<option>${item}</option>`).join('')}</select></div>
+          <div class="field"><label for="new-rarity">Rzadkość</label><select id="new-rarity" name="rarity">${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${n===5?'selected':''}>${n===0?'Specjalny':`${n}★`}</option>`).join('')}</select></div>
+          <div class="field"><label for="new-level">Aktualny poziom</label><input id="new-level" name="level" type="number" min="1" max="120" inputmode="numeric" placeholder="Nieznany"></div>
+          <div class="field"><label for="new-np">Poziom NP</label><select id="new-np" name="np">${[1,2,3,4,5].map(n=>`<option value="${n}">NP ${n}</option>`).join('')}</select></div>
+        </div>
+        <div class="field"><label for="new-skills">Poziomy trzech Skillów</label><input id="new-skills" name="skills" value="1, 1, 1" placeholder="1, 1, 1"><small>Wpisz trzy liczby oddzielone przecinkami, np. 6, 6, 6.</small></div>
+        <div class="field"><label for="new-note">Notatka (opcjonalnie)</label><textarea id="new-note" name="note" placeholder="Dodatkowe informacje…"></textarea></div>
+        <div class="form-actions"><button type="button" class="btn btn-secondary" data-action="go-home">Anuluj</button><button type="submit" class="btn btn-primary">Dodaj do Chaldei</button></div>
+      </form>
+    </section>
+  `;
+}
+
+function safeFileName(name) {
+  return String(name).toLowerCase().replace(/[^a-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '') || 'fgo_data';
+}
+
+function downloadJson(filename, object) {
+  const blob = new Blob([JSON.stringify(object, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportDatabase() {
+  const exported = JSON.parse(JSON.stringify(database));
+  exported.last_updated = exported.last_updated || new Date().toISOString().slice(0,10);
+  downloadJson('fgo_database.json', exported);
+  showToast('Wyeksportowano bazę gry.');
+}
+
+function exportSave() {
+  const exported = JSON.parse(JSON.stringify(saveData));
+  exported.exported_at = new Date().toISOString();
+  downloadJson('fgo_save.json', exported);
+  showToast('Wyeksportowano Twoje postępy.');
+}
+
+async function readJsonFile(file) {
+  const text = await file.text();
+  try { return JSON.parse(text); }
+  catch { throw new Error('Plik nie zawiera poprawnego JSON.'); }
+}
+
+async function importDatabaseFile(file) {
+  const candidate = await readJsonFile(file);
+  validateDatabase(candidate);
+  cleanUnusedDatabaseFields(candidate);
+  if (!confirm(`Zaimportować bazę ${candidate.database_version || 'bez numeru wersji'}? Aktualna baza zostanie zastąpiona. Twoje postępy i ekwipunek pozostaną bez zmian.`)) return;
+  database = candidate;
+  saveData.last_view = 'home';
+  ensureSaveRecords();
+  if (!database.servants.some(item => item.id === saveData.selected_servant_id)) saveData.selected_servant_id = database.servants[0]?.id || null;
+  await persistAll();
+  replaceAppView('home');
+  renderHome();
+  showToast('Baza została zaktualizowana. Twoje postępy zachowano.');
+}
+
+async function importSaveFile(file) {
+  const candidate = await readJsonFile(file);
+  validateSave(candidate);
+  if (!confirm('Zastąpić aktualny zapis postępów danymi z pliku? Bieżące poziomy i ekwipunek zostaną zastąpione. Baza materiałów pozostanie bez zmian.')) return;
+  saveData = candidate;
+  saveData.last_view = 'home';
+  ensureSaveRecords();
+  if (!database.servants.some(item => item.id === saveData.selected_servant_id)) saveData.selected_servant_id = database.servants[0]?.id || null;
+  await persistSave();
+  replaceAppView('home');
+  renderHome();
+  showToast('Przywrócono zapis postępów.');
+}
+
+function createServant(form) {
+  const formData = new FormData(form);
+  const name = String(formData.get('name') || '').trim();
+  if (!name) { showToast('Wpisz nazwę Servanta.'); return; }
+  const idBase = safeFileName(name);
+  let id = idBase;
+  let suffix = 2;
+  while (database.servants.some(item => item.id === id)) id = `${idBase}_${suffix++}`;
+  const skillValues = String(formData.get('skills') || '1,1,1').split(/[;,\s]+/).filter(Boolean).slice(0,3).map(value => Math.max(1,Math.min(10,Number(value)||1)));
+  while (skillValues.length < 3) skillValues.push(1);
+  const servant = {
+    id,
+    name,
+    class: String(formData.get('class') || 'Other'),
+    rarity: Number(formData.get('rarity') || 0),
+    skill_names: ['Skill 1','Skill 2','Skill 3'],
+    costs: { ascension: [null,null,null,null], skills: [[],[],[]], level_up: [] }
+  };
+  database.servants.push(servant);
+  saveData.servants[id] = {
+    owned: true,
+    level: formData.get('level') ? Number(formData.get('level')) : null,
+    np_level: Number(formData.get('np') || 1),
+    skill_levels: skillValues,
+    ascension_done: [false,false,false,false],
+    note: String(formData.get('note') || '')
+  };
+  saveData.selected_servant_id = id;
+  persistAll().then(() => { pushAppView('detail', { servantId: id }); renderDetail(id); showToast('Dodano Servanta.'); }).catch(error => showToast(error.message));
+}
+
+async function handleClick(event) {
+  const button = event.target.closest('[data-action]');
+  if (!button) return;
+  const action = button.dataset.action;
+  try {
+    switch (action) {
+      case 'go-home':
+        goBackToPreviousView();
+        break;
+      case 'open-servant':
+        pushAppView('detail', { servantId: button.dataset.id });
+        renderDetail(button.dataset.id);
+        await persistSave();
+        break;
+      case 'open-inventory': pushAppView('inventory'); renderInventory(); break;
+      case 'open-settings': pushAppView('settings'); renderSettings(); break;
+      case 'open-add': pushAppView('add'); renderAddServant(); break;
+      case 'change-skill': {
+        const progress = getProgress(activeServantId);
+        const type = 'skill_levels';
+        const index = Number(button.dataset.index);
+        const delta = Number(button.dataset.delta);
+        progress[type][index] = Math.max(1, Math.min(10, Number(progress[type][index] || 1) + delta));
+        await persistSave();
+        renderDetail(activeServantId);
+        break;
+      }
+      case 'toggle-ascension': {
+        const progress = getProgress(activeServantId);
+        const index = Number(button.dataset.index);
+        const markDone = !progress.ascension_done[index];
+        for (let step = 0; step < 4; step++) {
+          if (markDone && step <= index) progress.ascension_done[step] = true;
+          if (!markDone && step >= index) progress.ascension_done[step] = false;
+        }
+        await persistSave();
+        renderDetail(activeServantId);
+        break;
+      }
+      case 'export-database': exportDatabase(); break;
+      case 'export-save': exportSave(); break;
+      case 'choose-database': databaseInput.click(); break;
+      case 'choose-save': saveInput.click(); break;
+      case 'remove-servant': {
+        const id = button.dataset.id;
+        const servant = getServant(id);
+        if (!confirm(`Usunąć ${servant?.name || 'tego Servanta'} z Twojej listy? Wpis zostanie usunięty z lokalnej bazy i pojawi się ponownie tylko po ponownym imporcie.`)) return;
+        database.servants = database.servants.filter(item => item.id !== id);
+        delete saveData.servants[id];
+        saveData.selected_servant_id = database.servants[0]?.id || null;
+        await persistAll();
+        replaceAppView('home');
+        renderHome();
+        showToast('Usunięto Servanta.');
+        break;
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || 'Wystąpił problem.');
+  }
+}
+
+async function handleChange(event) {
+  const target = event.target;
+  try {
+    if (target.matches('[data-progress-field]') && activeServantId) {
+      const progress = getProgress(activeServantId);
+      const key = target.dataset.progressField;
+      if (key === 'note') progress.note = target.value;
+      else if (target.value === '') progress[key] = null;
+      else progress[key] = Math.max(key === 'np_level' ? 1 : 1, Math.min(key === 'np_level' ? 5 : 120, Number(target.value) || 1));
+      await persistSave();
+      if (key === 'level' || key === 'np_level') renderDetail(activeServantId);
+      if (key !== 'note') showToast('Zapisano zmiany.');
+    }
+    if (target.matches('[data-inventory-id]')) {
+      const value = Math.max(0, Math.floor(Number(target.value) || 0));
+      target.value = value;
+      saveData.inventory[target.dataset.inventoryId] = value;
+      await persistSave();
+    }
+    if (target.matches('[data-currency]')) {
+      const value = Math.max(0, Math.floor(Number(target.value) || 0));
+      target.value = value;
+      saveData.currencies[target.dataset.currency] = value;
+      await persistSave();
+    }
+    if (target.matches('[data-ember]')) {
+      const value = Math.max(0, Math.floor(Number(target.value) || 0));
+      target.value = value;
+      saveData.embers[target.dataset.ember] = value;
+      await persistSave();
+    }
+  } catch (error) {
+    showToast(error.message || 'Nie udało się zapisać zmian.');
+  }
+}
+
+window.addEventListener('popstate', async event => {
+  const state = event.state;
+  if (!state?.fgoTracker || state.view === 'home') {
+    renderHome();
+  } else if (state.view === 'detail' && state.servantId && getServant(state.servantId)) {
+    renderDetail(state.servantId);
+  } else if (state.view === 'inventory') {
+    renderInventory();
+  } else if (state.view === 'settings') {
+    renderSettings();
+  } else if (state.view === 'add') {
+    renderAddServant();
+  } else {
+    renderHome();
+  }
+  if (saveData) {
+    saveData.last_view = currentView === 'detail' ? 'detail' : 'home';
+    if (activeServantId) saveData.selected_servant_id = activeServantId;
+    await persistSave();
+  }
+});
+
+app.addEventListener('click', handleClick);
+app.addEventListener('change', handleChange);
+app.addEventListener('submit', event => {
+  if (event.target.id === 'add-servant-form') {
+    event.preventDefault();
+    createServant(event.target);
+  }
+});
+
+databaseInput.addEventListener('change', async () => {
+  const file = databaseInput.files?.[0];
+  databaseInput.value = '';
+  if (!file) return;
+  try { await importDatabaseFile(file); }
+  catch (error) { showToast(error.message || 'Nie udało się zaimportować bazy.'); }
+});
+saveInput.addEventListener('change', async () => {
+  const file = saveInput.files?.[0];
+  saveInput.value = '';
+  if (!file) return;
+  try { await importSaveFile(file); }
+  catch (error) { showToast(error.message || 'Nie udało się przywrócić postępów.'); }
+});
+
+initialise();
+
+</script>
+</body>
+</html>

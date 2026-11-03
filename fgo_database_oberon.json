@@ -1,0 +1,548 @@
+{
+  "schema_version": 1,
+  "database_version": "1.0.4",
+  "game": "Fate/Grand Order Global",
+  "last_updated": "2026-11-01",
+  "description": "Baza FGO Global. Oberon: koszty Ascension oraz kolejnych poziomów trzech zwykłych Skillów. Tracker pokazuje koszty następnych ulepszeń i sumę pozostałych materiałów do 4/4 Ascension oraz 10/10/10. Nie wylicza kart EXP, Append Skills ani QP.",
+  "materials": [
+    {
+      "id": "void_dust",
+      "name": "Void's Dust",
+      "category": "Ascension"
+    },
+    {
+      "id": "phoenix_feather",
+      "name": "Phoenix Feather",
+      "category": "Ascension"
+    },
+    {
+      "id": "ghost_lantern",
+      "name": "Ghost Lantern",
+      "category": "Ascension"
+    },
+    {
+      "id": "lamp_of_evil_sealing",
+      "name": "Lamp of Evil-Sealing",
+      "category": "Ascension"
+    },
+    {
+      "id": "claw_of_chaos",
+      "name": "Claw of Chaos",
+      "category": "Ascension"
+    },
+    {
+      "id": "black_beast_grease",
+      "name": "Black Beast Grease",
+      "category": "Ascension"
+    },
+    {
+      "id": "deadly_poisonous_needle",
+      "name": "Deadly Poisonous Needle",
+      "category": "Ascension / Skills"
+    },
+    {
+      "id": "scale_of_fantasy",
+      "name": "Scale of Fantasy",
+      "category": "Ascension / Skills"
+    },
+    {
+      "id": "seed_of_yggdrasil",
+      "name": "Seed of Yggdrasil",
+      "category": "Skills"
+    },
+    {
+      "id": "spirit_root",
+      "name": "Spirit Root",
+      "category": "Skills"
+    },
+    {
+      "id": "cursed_beast_gallstone",
+      "name": "Cursed Beast Gallstone",
+      "category": "Skills"
+    },
+    {
+      "id": "crown_of_silvery_light",
+      "name": "Crown of Silvery Light",
+      "category": "Skills"
+    },
+    {
+      "id": "fruit_of_eternity",
+      "name": "Fruit of Eternity",
+      "category": "Skills"
+    },
+    {
+      "id": "small_bell_of_absolution",
+      "name": "Small Bell of Absolution",
+      "category": "Skills"
+    },
+    {
+      "id": "crystallized_lore",
+      "name": "Crystallized Lore",
+      "category": "Skills"
+    }
+  ],
+  "servants": [
+    {
+      "id": "gilgamesh",
+      "name": "Gilgamesh",
+      "class": "Archer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "koyanskaya_light",
+      "name": "Koyanskaya of Light",
+      "class": "Assassin",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "oberon",
+      "name": "Oberon",
+      "class": "Pretender",
+      "rarity": 5,
+      "skill_names": [
+        "Evening Shroud EX",
+        "Morning Lark EX",
+        "Ending of Dreams EX"
+      ],
+      "costs": {
+        "ascension": [
+          {
+            "materials": {
+              "void_dust": 10,
+              "phoenix_feather": 10
+            }
+          },
+          {
+            "materials": {
+              "ghost_lantern": 10,
+              "lamp_of_evil_sealing": 10
+            }
+          },
+          {
+            "materials": {
+              "claw_of_chaos": 10,
+              "black_beast_grease": 10
+            }
+          },
+          {
+            "materials": {
+              "deadly_poisonous_needle": 10,
+              "scale_of_fantasy": 10
+            }
+          }
+        ],
+        "skills": [
+          [
+            {
+              "from": 1,
+              "to": 2,
+              "materials": {
+                "seed_of_yggdrasil": 10
+              }
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "materials": {
+                "deadly_poisonous_needle": 10
+              }
+            },
+            {
+              "from": 3,
+              "to": 4,
+              "materials": {
+                "spirit_root": 12
+              }
+            },
+            {
+              "from": 4,
+              "to": 5,
+              "materials": {
+                "cursed_beast_gallstone": 12
+              }
+            },
+            {
+              "from": 5,
+              "to": 6,
+              "materials": {
+                "crown_of_silvery_light": 12
+              }
+            },
+            {
+              "from": 6,
+              "to": 7,
+              "materials": {
+                "fruit_of_eternity": 15
+              }
+            },
+            {
+              "from": 7,
+              "to": 8,
+              "materials": {
+                "small_bell_of_absolution": 15
+              }
+            },
+            {
+              "from": 8,
+              "to": 9,
+              "materials": {
+                "scale_of_fantasy": 15
+              }
+            },
+            {
+              "from": 9,
+              "to": 10,
+              "materials": {
+                "crystallized_lore": 1
+              }
+            }
+          ],
+          [
+            {
+              "from": 1,
+              "to": 2,
+              "materials": {
+                "seed_of_yggdrasil": 10
+              }
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "materials": {
+                "deadly_poisonous_needle": 10
+              }
+            },
+            {
+              "from": 3,
+              "to": 4,
+              "materials": {
+                "spirit_root": 12
+              }
+            },
+            {
+              "from": 4,
+              "to": 5,
+              "materials": {
+                "cursed_beast_gallstone": 12
+              }
+            },
+            {
+              "from": 5,
+              "to": 6,
+              "materials": {
+                "crown_of_silvery_light": 12
+              }
+            },
+            {
+              "from": 6,
+              "to": 7,
+              "materials": {
+                "fruit_of_eternity": 15
+              }
+            },
+            {
+              "from": 7,
+              "to": 8,
+              "materials": {
+                "small_bell_of_absolution": 15
+              }
+            },
+            {
+              "from": 8,
+              "to": 9,
+              "materials": {
+                "scale_of_fantasy": 15
+              }
+            },
+            {
+              "from": 9,
+              "to": 10,
+              "materials": {
+                "crystallized_lore": 1
+              }
+            }
+          ],
+          [
+            {
+              "from": 1,
+              "to": 2,
+              "materials": {
+                "seed_of_yggdrasil": 10
+              }
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "materials": {
+                "deadly_poisonous_needle": 10
+              }
+            },
+            {
+              "from": 3,
+              "to": 4,
+              "materials": {
+                "spirit_root": 12
+              }
+            },
+            {
+              "from": 4,
+              "to": 5,
+              "materials": {
+                "cursed_beast_gallstone": 12
+              }
+            },
+            {
+              "from": 5,
+              "to": 6,
+              "materials": {
+                "crown_of_silvery_light": 12
+              }
+            },
+            {
+              "from": 6,
+              "to": 7,
+              "materials": {
+                "fruit_of_eternity": 15
+              }
+            },
+            {
+              "from": 7,
+              "to": 8,
+              "materials": {
+                "small_bell_of_absolution": 15
+              }
+            },
+            {
+              "from": 8,
+              "to": 9,
+              "materials": {
+                "scale_of_fantasy": 15
+              }
+            },
+            {
+              "from": 9,
+              "to": 10,
+              "materials": {
+                "crystallized_lore": 1
+              }
+            }
+          ]
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "castoria",
+      "name": "Artoria Caster",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ryouma_lancer",
+      "name": "Sakamoto Ryouma (Lancer)",
+      "class": "Lancer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "waver",
+      "name": "Zhuge Liang (Waver)",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "lanling",
+      "name": "Prince of Lan Ling",
+      "class": "Saber",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ranmaru",
+      "name": "Mysterious Ranmaru X",
+      "class": "Avenger",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "mash",
+      "name": "Mash Kyrielight",
+      "class": "Shielder",
+      "rarity": 0,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "cu_lancer",
+      "name": "Cu Chulainn",
+      "class": "Lancer",
+      "rarity": 3,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    }
+  ]
+}

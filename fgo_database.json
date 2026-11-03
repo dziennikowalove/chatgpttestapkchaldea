@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "database_version": "1.0.3",
+  "game": "Fate/Grand Order Global",
+  "last_updated": "2026-11-01",
+  "description": "Baza danych FGO. Koszty materiałów są celowo puste i mogą zostać uzupełnione w kolejnych aktualizacjach.",
+  "materials": [],
+  "servants": [
+    {
+      "id": "gilgamesh",
+      "name": "Gilgamesh",
+      "class": "Archer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "koyanskaya_light",
+      "name": "Koyanskaya of Light",
+      "class": "Assassin",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "oberon",
+      "name": "Oberon",
+      "class": "Pretender",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "castoria",
+      "name": "Artoria Caster",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ryouma_lancer",
+      "name": "Sakamoto Ryouma (Lancer)",
+      "class": "Lancer",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "waver",
+      "name": "Zhuge Liang (Waver)",
+      "class": "Caster",
+      "rarity": 5,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "lanling",
+      "name": "Prince of Lan Ling",
+      "class": "Saber",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "ranmaru",
+      "name": "Mysterious Ranmaru X",
+      "class": "Avenger",
+      "rarity": 4,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "mash",
+      "name": "Mash Kyrielight",
+      "class": "Shielder",
+      "rarity": 0,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    },
+    {
+      "id": "cu_lancer",
+      "name": "Cu Chulainn",
+      "class": "Lancer",
+      "rarity": 3,
+      "skill_names": [
+        "Skill 1",
+        "Skill 2",
+        "Skill 3"
+      ],
+      "costs": {
+        "ascension": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "skills": [
+          [],
+          [],
+          []
+        ],
+        "level_up": []
+      }
+    }
+  ]
+}

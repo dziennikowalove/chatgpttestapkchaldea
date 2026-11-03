@@ -1,0 +1,189 @@
+{
+  "save_schema_version": 1,
+  "exported_at": null,
+  "inventory": {},
+  "currencies": {
+    "pure_prisms": 0
+  },
+  "embers": {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0
+  },
+  "servants": {
+    "gilgamesh": {
+      "owned": true,
+      "level": 100,
+      "np_level": 1,
+      "skill_levels": [
+        8,
+        8,
+        7
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 8/8/7, poziom 100. Graile ma już uwzględnione w obecnym poziomie."
+    },
+    "koyanskaya_light": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        4,
+        4,
+        4
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 4/4/4."
+    },
+    "oberon": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        3,
+        4,
+        3
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 3/4/3."
+    },
+    "castoria": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        2,
+        2,
+        2
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Obecnie 2/2/2."
+    },
+    "ryouma_lancer": {
+      "owned": true,
+      "level": 90,
+      "np_level": 1,
+      "skill_levels": [
+        2,
+        7,
+        2
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "Chodzi o wersję Lancer, nie Rider. Obecnie 2/7/2."
+    },
+    "waver": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        4,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Poziom i ascension do uzupełnienia."
+    },
+    "lanling": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Poziom i ascension do uzupełnienia."
+    },
+    "ranmaru": {
+      "owned": true,
+      "level": null,
+      "np_level": 5,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "note": "NP5. Przyjęłam, że ascension są zrobione, bo postać jest już levelowana; wpisz dokładny poziom poniżej."
+    },
+    "mash": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Rozwój Mash jest powiązany z fabułą; trzeci skill może zależeć od odblokowania."
+    },
+    "cu_lancer": {
+      "owned": true,
+      "level": null,
+      "np_level": 1,
+      "skill_levels": [
+        1,
+        1,
+        1
+      ],
+      "ascension_done": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "note": "Cu Chulainn w wersji Lancer, 3★. Poziom do uzupełnienia."
+    }
+  },
+  "selected_servant_id": "gilgamesh",
+  "last_view": "home"
+}
